@@ -7,6 +7,9 @@
     "editor.defaultFormatter": null,
     "editor.formatOnSave": false
   },
+  "workbench.colorCustomizations": {
+    "terminal.selectionBackground": "#44475a"
+  },
 
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
