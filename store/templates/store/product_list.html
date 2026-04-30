@@ -1,0 +1,84 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<form method="GET" class="mb-4">
+  <select name="category" class="form-select w-25 d-inline">
+    <option value="">All Categories</option>
+
+    {% for cat in categories %}
+    <option value="{{ cat }}" {% if cat == selected_category %} selected {% endif %}>
+      {{ cat }}
+    </option>
+    {% endfor %}
+  </select>
+
+  <button class="btn btn-primary btn-sm">Filter</button>
+</form>
+
+<h2 class="mb-4">Products</h2>
+
+{% if products %}
+
+<div class="row">
+  {% for product in products %}
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3 mb-4">
+      {% if product.image %}
+      <img src="{{ product.image.url }}" class="card-img-top mb-3" style="height: 200px; object-fit: cover" />
+      {% endif %}
+
+      <h4>
+        <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+          {{ product.name }}
+        </a>
+      </h4>
+
+      <p>{{ product.description }}</p>
+      <p class="fw-bold">Rs. {{ product.price }}</p>
+
+      <a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">
+        View Details
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link"
+        href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if query %}&q={{ query }}{% endif %}">
+        Previous
+      </a>
+    </li>
+    {% endif %}
+
+    <li class="page-item active">
+      <span class="page-link">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link"
+        href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if query %}&q={{ query }}{% endif %}">
+        Next
+      </a>
+    </li>
+    {% endif %}
+
+  </ul>
+</nav>
+
+{% else %}
+
+<p class="text-danger">No products found.</p>
+
+{% endif %}
+
+{% endblock %}

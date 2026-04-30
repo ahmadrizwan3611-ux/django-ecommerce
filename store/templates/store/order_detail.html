@@ -1,0 +1,37 @@
+{% extends 'store/base.html' %}
+
+<main class="flex-grow-1 container mt-4"></main>
+{% block content %}
+<a href="{% url 'order_history' %}" class="text-decoration-none">
+  ← Back to Orders
+</a>
+<h2>Order #{{ order.id }}</h2>
+
+<p><strong>Name:</strong> {{ order.full_name }}</p>
+<p><strong>Phone:</strong> {{ order.phone }}</p>
+<p><strong>Address:</strong> {{ order.address }}</p>
+<p><strong>Date:</strong> {{ order.created_at }}</p>
+
+<hr />
+
+<h4>Items</h4>
+
+{% for item in order_items %}
+<div class="card p-3 mb-2">
+  <h5>{{ item.product.name }}</h5>
+  <p>Price: Rs. {{ item.price }}</p>
+  <p>Quantity: {{ item.quantity }}</p>
+  <p>Total: Rs. {{ item.total_price }}</p>
+</div>
+{% endfor %}
+
+<h3>Grand Total: Rs. {{ order.total_amount }}</h3>
+
+<div class="mt-4 mb-5 pb-5">
+    <a href="{% url 'order_history' %}" class="btn btn-outline-dark btn-sm">
+        ← Back
+    </a>
+</div>
+
+{% endblock %}
+</main>

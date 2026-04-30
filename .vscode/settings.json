@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "python.env.defaultEnvManager": "ms-python.python:system",
+
+  "[django-html]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false
+  },
+
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
