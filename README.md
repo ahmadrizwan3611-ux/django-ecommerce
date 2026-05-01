@@ -3,7 +3,6 @@
 A fully functional e-commerce web application built using Django.  
 This project demonstrates core backend development concepts including authentication, cart management, and session handling.
 
----
 
 ## 🚀 Features
 
@@ -34,13 +33,9 @@ This project demonstrates core backend development concepts including authentica
 - HTML, CSS, Bootstrap
 - SQLite (default Django DB)
 
----
-
----
-
 ## ⚙️ Installation
 
-```bash
+bash
 git clone https://github.com/ahmadrizwan3611-ux/django-ecommerce
 
 cd django-ecommerce
