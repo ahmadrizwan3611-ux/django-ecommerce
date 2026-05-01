@@ -36,10 +36,6 @@ This project demonstrates core backend development concepts including authentica
 
 ---
 
-## 📸 Screenshots
-
-(Add screenshots here later)
-
 ---
 
 ## ⚙️ Installation
