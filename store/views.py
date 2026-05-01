@@ -44,21 +44,16 @@ def product_detail(request, id):
   
 # func for add_to_cart   
 def add_to_cart(request, id):
-    product = get_object_or_404(Product, id=id)
-
     cart = request.session.get('cart', {})
 
-    product_id = str(product.id)
-
-    if product_id in cart:
-        cart[product_id] += 1
-    else:
-        cart[product_id] = 1
+    id = str(id)
+    cart[id] = cart.get(id, 0) + 1
 
     request.session['cart'] = cart
-    messages.success(request, f"{product.name} added to cart.")
 
-    return redirect('cart_page')
+    messages.success(request, "Item added to cart!")
+
+    return redirect(request.META.get('HTTP_REFERER', 'product_list'))
 
 # func for cart_page
 def cart_page(request):
