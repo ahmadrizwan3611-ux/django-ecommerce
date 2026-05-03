@@ -1,16 +1,22 @@
 {% extends 'store/base.html' %}
 
-{% block content %}
 
+{% block content %}
+<div
+  id="cart-message"
+  class="alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3 d-none"
+  style="z-index: 9999;"
+></div>
 
 <h2 class="mb-4">Products</h2>
 
 {% if products %}
 
-<div class="row">
+<div class="row g-4">
   {% for product in products %}
-  <div class="col-md-4 mb-4">
+  <div class="col-12 col-sm-6 col-lg-4">
     <div class="card h-100 shadow-sm border-0">
+     <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">
       {% if product.image %}
       <img src="{{ product.image.url }}" class="card-img-top" style="height: 230px; object-fit: cover" />
       {% endif %}
@@ -31,16 +37,22 @@
         </p>
 
         <h5 class="fw-bold mt-auto">Rs. {{ product.price }}</h5>
+       </a>
 
         <div class="mt-auto d-flex gap-2">
 
-          <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary w-50">
-            Details
-          </a>
+     <div class="d-flex gap-2 mt-auto">
 
-          <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary w-50">
-            Add to Cart
-          </a>
+        <a href="{% url 'product_detail' product.id %}"
+         class="btn btn-outline-primary flex-fill text-center">
+         Details
+        </a>
+
+        <button class="btn btn-primary add-to-cart-btn" data-id="{{ product.id }}">
+         Add to Cart
+        </button>
+
+     </div>
 
         </div>
       </div>
@@ -84,5 +96,36 @@
 <p class="text-danger">No products found.</p>
 
 {% endif %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const button = document.querySelector(".add-to-cart-btn");
+
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const productId = this.dataset.id;
+
+      fetch(`/add-to-cart/${productId}/`, {
+        method: "GET",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("cart-count").innerText =
+          `Cart (${data.cart_count})`;
+
+        const msg = document.getElementById("cart-message");
+        msg.innerText = data.message || "Product added to cart!";
+        msg.classList.remove("d-none");
+
+        setTimeout(function () {
+          msg.classList.add("d-none");
+        }, 2000);
+      });
+    });
+  });
+</script>
 
 {% endblock %}

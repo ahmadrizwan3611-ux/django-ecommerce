@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.contrib import messages
 
 # func for product_list
 def product_list(request):
@@ -34,25 +36,31 @@ def product_list(request):
         "selected_category": category,
         "query": query,
     })
- 
- # func for product_detail  
+
+ # func for product_detail
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
     return render(request, 'store/product_detail.html', {
         'product': product
         })
-  
-# func for add_to_cart   
+
+# func for add_to_cart
 def add_to_cart(request, id):
     cart = request.session.get('cart', {})
+    product_id = str(id)
 
-    id = str(id)
-    cart[id] = cart.get(id, 0) + 1
-
+    cart[product_id] = cart.get(product_id, 0) + 1
     request.session['cart'] = cart
 
-    messages.success(request, "Item added to cart!")
+    cart_count = sum(cart.values())
 
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'message': 'Product added to cart!',
+            'cart_count': cart_count
+        })
+
+    messages.success(request, "Product added to cart!")
     return redirect(request.META.get('HTTP_REFERER', 'product_list'))
 
 # func for cart_page
@@ -78,7 +86,7 @@ def cart_page(request):
         'total': total
     })
 
-# func for remove_from_cart    
+# func for remove_from_cart
 def remove_from_cart(request, id):
     cart = request.session.get('cart', {})
     product_id = str(id)
@@ -148,7 +156,7 @@ def order_success(request, order_id):
     return render(request, 'store/order_success.html', {
         'order': order
         })
-    
+
 # func for registration
 def register(request):
     if request.method == "POST":
@@ -171,7 +179,7 @@ def order_history(request):
         'orders': orders
         })
 
-# func for order_detail    
+# func for order_detail
 @login_required(login_url='login')
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)

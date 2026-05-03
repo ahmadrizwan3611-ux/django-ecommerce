@@ -1,17 +1,57 @@
-{% extends 'store/base.html' %} {% block content %} {% if product.image %}
-<img
-  src="{{ product.image.url }}"
-  class="img-fluid mb-3"
-  style="max-height: 400px; object-fit: cover"
-/>
-{% endif %}
-<h2>{{ product.name }}</h2>
+{% extends 'store/base.html' %}
 
+{% block content %}
+
+<div
+  id="cart-message"
+  class="alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3 d-none"
+  style="z-index: 9999;"
+></div>
+
+{% if product.image %}
+<img src="{{ product.image.url }}" style="max-width: 600px; width: 100%;">
+{% endif %}
+
+<h1>{{ product.name }}</h1>
 <p>{{ product.description }}</p>
 <p>Price: Rs. {{ product.price }}</p>
 
-<a href="{% url 'add_to_cart' product.id %}" class="btn btn-success">
+<button class="btn btn-primary add-to-cart-btn" data-id="{{ product.id }}">
   Add to Cart
-</a>
+</button>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const button = document.querySelector(".add-to-cart-btn");
+
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const productId = this.dataset.id;
+
+      fetch(`/add-to-cart/${productId}/`, {
+        method: "GET",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const msg = document.getElementById("cart-message");
+          msg.innerText = data.message || "Product added to cart!";
+          msg.classList.remove("d-none");
+
+          const cartCount = document.getElementById("cart-count");
+          if (cartCount) {
+            cartCount.innerText = `Cart (${data.cart_count})`;
+          }
+
+          setTimeout(function () {
+            msg.classList.add("d-none");
+          }, 2000);
+        });
+    });
+  });
+</script>
 
 {% endblock %}

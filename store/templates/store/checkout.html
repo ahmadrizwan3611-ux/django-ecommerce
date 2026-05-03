@@ -1,34 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Checkout</title>
-</head>
-<body>
+{% extends 'store/base.html' %}
 
-<h1>Checkout</h1>
+{% block content %}
 
-<h2>Total Amount: Rs. {{ total }}</h2>
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm border-0 p-4">
+      <h2 class="mb-3">Checkout</h2>
 
-<form method="POST">
-    {% csrf_token %}
+      <div class="alert alert-info">
+        <strong>Total Amount:</strong> Rs. {{ total }}
+      </div>
 
-    <p>
-        Full Name:
-        <input type="text" name="full_name" required>
-    </p>
+      <form method="POST">
+        {% csrf_token %}
 
-    <p>
-        Phone:
-        <input type="text" name="phone" required>
-    </p>
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="full_name" class="form-control" required>
+        </div>
 
-    <p>
-        Address:
-        <textarea name="address" required></textarea>
-    </p>
+        <div class="mb-3">
+          <label class="form-label">Phone</label>
+          <input type="text" name="phone" class="form-control" required>
+        </div>
 
-    <button type="submit">Place Order</button>
-</form>
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          <textarea name="address" class="form-control" rows="3" required></textarea>
+        </div>
 
-</body>
-</html>
+        <button type="submit" class="btn btn-primary w-100">
+          Place Order
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
